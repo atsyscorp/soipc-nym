@@ -1,0 +1,424 @@
+/*============================*/
+/*Hoja de estilos Encuesta NYM*/
+/*============================*/
+/*General*/
+html, body {margin: 0px 0px 0px 0px;font-style: normal;font-weight: 400;width:100%;height:100%;font-family: helvetica,verdana,sans-serif;}
+a{text-decoration:none;color:inherit;}
+a:visited{text-decoration:none}
+a:hover{text-decoration:none;}
+h1, h2, h3, h4, h5, h6 { font-style: normal; text-decoration:none; font-weight:normal; margin:0px; padding:0px}
+/*======================================*/
+/*Fuente Iconos*/
+/*======================================*/
+@font-face {
+  font-family: 'icons';
+  src: url('../fonts/fontawesome-webfont.eot?v=4.6.3');
+  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.6.3') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.6.3') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.6.3') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.6.3') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.6.3#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/*============================*/
+/*Desuscripcion*/
+.desuscribir{
+	width: 100%;
+	min-height: 100%;
+	height: auto;
+	background-color: rgba(235,235,235,1);
+	padding:50px 0px;
+	box-sizing: border-box;
+	font-family: helvetica,verdana,sans-serif;
+}
+	.desuscribir .desuscribir-contenedor{
+		width: 50%;
+		padding:30px 0px;
+		box-sizing: border-box;
+		height: auto;
+		margin:0px auto;
+		background-color: rgba(255,255,255,1);
+		border:4px solid rgba(135,179,84,1);
+		-moz-border-radius: 10px;
+		-webkit-border-radius: 10px;
+		border-radius: 10px;
+	}
+		.desuscribir .desuscribir-contenedor .desuscribir-logo{
+			width: 90%;
+			margin:0px auto;
+			padding:20px 0px;
+			box-sizing: border-box;
+			text-align: left;
+		}
+			.desuscribir .desuscribir-contenedor .desuscribir-logo img{
+				width: 250px;
+			}
+		.desuscribir .desuscribir-contenedor .desuscribir-nombre{
+			width: 90%;
+			margin:0px auto;
+			font-size: 21px;
+			text-align: left;
+			color: rgba(0,127,76,1);
+			padding:20px 0px;
+			box-sizing: border-box;
+		}
+		.desuscribir .desuscribir-contenedor .desuscribir-contenido{
+			width: 90%;
+			margin:0px auto;
+			font-size: 17px;
+			text-align: left;
+			color: rgba(111,111,111,1);
+			line-height: 1.7em;
+		}
+			.desuscribir .desuscribir-contenedor .desuscribir-contenido a{
+				color: rgba(0,127,76,1);
+				-webkit-transition: color 0.4s ease-in-out 0s;
+				-moz-transition: color 0.4s ease-in-out 0s;
+				-o-transition: color 0.4s ease-in-out 0s;
+				-ms-transition: color 0.4s ease-in-out 0s;
+				transition: color 0.4s ease-in-out 0s;
+			}
+			.desuscribir .desuscribir-contenedor .desuscribir-contenido a:hover{
+				color: rgba(135,179,84,1);
+			}
+		.desuscribir .desuscribir-contenedor .desuscribir-boton{
+			width: 150px;
+			background-color: rgba(0,127,76,1);
+			color: rgba(255,255,255,1);
+			text-align: center;
+			padding: 10px 0px;
+			box-sizing: border-box;
+			font-size: 17px;
+			-webkit-transition: background-color 0.4s ease-in-out 0s;
+			-moz-transition: background-color 0.4s ease-in-out 0s;
+			-o-transition: background-color 0.4s ease-in-out 0s;
+			-ms-transition: background-color 0.4s ease-in-out 0s;
+			transition: background-color 0.4s ease-in-out 0s;
+			margin:40px 0px 0px 5%;
+		}
+		.desuscribir .desuscribir-contenedor .desuscribir-boton:hover{
+			background-color: rgba(135,179,84,1);
+		}
+/*============================*/
+/*Encuesta*/
+.encuesta{
+	width: 100%;
+	min-height: 100%;
+	height: auto;
+	background-color: rgba(235,235,235,1);
+	padding:50px 0px;
+	box-sizing: border-box;
+	font-family: helvetica,verdana,sans-serif;
+}
+	.encuesta .encuesta-contenedor{
+		width: 50%;
+		padding:30px 0px;
+		box-sizing: border-box;
+		height: auto;
+		margin:0px auto;
+		background-color: rgba(255,255,255,1);
+		border:4px solid rgba(135,179,84,1);
+		-moz-border-radius: 10px;
+		-webkit-border-radius: 10px;
+		border-radius: 10px;
+	}
+		.encuesta .encuesta-contenedor .encuesta-logo{
+			width: 90%;
+			margin:0px auto;
+			padding:20px 0px;
+			box-sizing: border-box;
+			text-align: left;
+		}
+			.encuesta .encuesta-contenedor .encuesta-logo img{
+				width: 250px;
+			}
+		.encuesta .encuesta-contenedor .encuesta-nombre{
+			width: 90%;
+			margin:0px auto;
+			font-size: 21px;
+			text-align: left;
+			color: rgba(0,127,76,1);
+			padding:20px 0px;
+			box-sizing: border-box;
+		}
+		.encuesta .encuesta-contenedor .encuesta-texto{
+			width: 90%;
+			margin:0px auto;
+			font-size: 17px;
+			text-align: left;
+			color: rgba(111,111,111,1);
+			line-height: 1.4em;
+			border-bottom: 1px solid rgba(235,235,235,1);
+			padding-bottom: 30px;
+		}
+		.encuesta .encuesta-contenedor .encuesta-contenido{
+			width: 90%;
+			margin:0px auto;
+			font-size: 17px;
+			color: rgba(111,111,111,1);
+			line-height: 1.4em;
+			box-sizing: border-box;
+		}
+			.encuesta .encuesta-contenedor .encuesta-pregunta .encuesta-pregunta-titulo{
+				width: 100%;
+				margin:0px auto;
+				font-size: 17px;
+				color: rgba(111,111,111,1);
+				line-height: 1.4em;
+				padding:20px 0px;
+				box-sizing: border-box;
+				text-align: left;
+			}
+			.encuesta .encuesta-contenedor .encuesta-pregunta .encuesta-pregunta-pregunta{
+				width: 100%;
+				margin:0px auto;
+				font-size: 17px;
+				color: rgba(111,111,111,1);
+				line-height: 1.4em;
+				box-sizing: border-box;
+				text-align: center;
+				border-bottom: 1px solid rgba(235,235,235,1);
+				padding:10px 0px 30px 0px;
+			}
+				.encuesta .encuesta-contenedor .encuesta-pregunta .encuesta-pregunta-pregunta div{
+					display: inline-block;
+					vertical-align: top;
+					width: 20%;
+				}
+				.encuesta .encuesta-contenedor .encuesta-pregunta .encuesta-pregunta-pregunta .pregunta-label{
+					color: rgba(0,127,76,1);
+				}
+				.encuesta .encuesta-contenedor .encuesta-pregunta .encuesta-pregunta-pregunta .pregunta-input{
+					width: 19px;
+					height: 19px;
+					position: relative;
+					top: 3px;
+				}
+				.encuesta .encuesta-contenedor .encuesta-pregunta .encuesta-pregunta-pregunta textarea{
+					width: 100%;
+					height: 150px;
+					resize: none;
+					font-family: helvetica,verdana,sans-serif;
+					font-size: 15px;
+					color: rgba(111,111,111,1);
+					box-sizing: border-box;
+					padding:10px;
+					border:1px solid rgba(135,179,84,1);
+				}
+			.encuesta .encuesta-contenedor .encuesta-contenido .encuesta-boton{
+				width: 100px;
+				background-color: rgba(0,127,76,1);
+				color: rgba(255,255,255,1);
+				text-align: center;
+				padding: 10px 0px;
+				box-sizing: border-box;
+				font-size: 17px;
+				-webkit-transition: background-color 0.4s ease-in-out 0s;
+				-moz-transition: background-color 0.4s ease-in-out 0s;
+				-o-transition: background-color 0.4s ease-in-out 0s;
+				-ms-transition: background-color 0.4s ease-in-out 0s;
+				transition: background-color 0.4s ease-in-out 0s;
+				margin-top: 20px;
+				border:none;
+				cursor: pointer;
+			}
+			.encuesta .encuesta-contenedor .encuesta-contenido .encuesta-boton:hover{
+				background-color: rgba(135,179,84,1);
+			}
+/*============================*/
+/*Gracias*/
+.gracias{
+	width: 100%;
+	min-height: 100%;
+	height: auto;
+	background-color: rgba(235,235,235,1);
+	padding:50px 0px;
+	box-sizing: border-box;
+	font-family: helvetica,verdana,sans-serif;
+}
+	.gracias .gracias-contenedor{
+		width: 50%;
+		padding:30px 0px;
+		box-sizing: border-box;
+		height: auto;
+		margin:0px auto;
+		background-color: rgba(255,255,255,1);
+		border:4px solid rgba(135,179,84,1);
+		-moz-border-radius: 10px;
+		-webkit-border-radius: 10px;
+		border-radius: 10px;
+	}
+		.gracias .gracias-contenedor .gracias-logo{
+			width: 90%;
+			margin:0px auto;
+			padding:20px 0px;
+			box-sizing: border-box;
+			text-align: left;
+		}
+			.gracias .gracias-contenedor .gracias-logo img{
+				width: 250px;
+			}
+		.gracias .gracias-contenedor .gracias-nombre{
+			width: 90%;
+			margin:0px auto;
+			font-size: 21px;
+			text-align: left;
+			color: rgba(0,127,76,1);
+			padding:20px 0px;
+			box-sizing: border-box;
+		}
+		.gracias .gracias-contenedor .gracias-contenido{
+			width: 90%;
+			margin:0px auto;
+			font-size: 17px;
+			text-align: left;
+			color: rgba(111,111,111,1);
+			line-height: 1.7em;
+		}
+			.gracias .gracias-contenedor .gracias-contenido a{
+				color: rgba(0,127,76,1);
+				-webkit-transition: color 0.4s ease-in-out 0s;
+				-moz-transition: color 0.4s ease-in-out 0s;
+				-o-transition: color 0.4s ease-in-out 0s;
+				-ms-transition: color 0.4s ease-in-out 0s;
+				transition: color 0.4s ease-in-out 0s;
+			}
+			.gracias .gracias-contenedor .gracias-contenido a:hover{
+				color: rgba(135,179,84,1);
+			}
+		.gracias .gracias-contenedor .gracias-boton{
+			width: 150px;
+			background-color: rgba(0,127,76,1);
+			color: rgba(255,255,255,1);
+			text-align: center;
+			padding: 10px 0px;
+			box-sizing: border-box;
+			font-size: 17px;
+			-webkit-transition: background-color 0.4s ease-in-out 0s;
+			-moz-transition: background-color 0.4s ease-in-out 0s;
+			-o-transition: background-color 0.4s ease-in-out 0s;
+			-ms-transition: background-color 0.4s ease-in-out 0s;
+			transition: background-color 0.4s ease-in-out 0s;
+			margin:40px 0px 0px 5%;
+		}
+		.gracias .gracias-contenedor .gracias-boton:hover{
+			background-color: rgba(135,179,84,1);
+		}
+		.gracias .gracias-contenedor .gracias-privacidad{
+			text-align: center;
+			color: rgba(60,60,60,1);
+			font-size: 12px;
+			padding:30px 0px 20px 0px;
+			width: 90%;
+			margin:0px auto;
+		}
+/*===========================*/
+/*Error*/
+.error{
+	width: 100%;
+	min-height: 100%;
+	height: auto;
+	background-color: rgba(235,235,235,1);
+	padding:50px 0px;
+	box-sizing: border-box;
+	font-family: helvetica,verdana,sans-serif;
+}
+	.error .error-contenedor{
+		width: 50%;
+		padding:30px 0px;
+		box-sizing: border-box;
+		height: auto;
+		margin:0px auto;
+		background-color: rgba(255,255,255,1);
+		border:4px solid rgba(135,179,84,1);
+		-moz-border-radius: 10px;
+		-webkit-border-radius: 10px;
+		border-radius: 10px;
+	}
+		.error .error-contenedor .error-logo{
+			width: 90%;
+			margin:0px auto;
+			padding:20px 0px;
+			box-sizing: border-box;
+			text-align: left;
+		}
+			.error .error-contenedor .error-logo img{
+				width: 250px;
+			}
+		.error .error-contenedor .error-contenido{
+			width: 90%;
+			margin:0px auto;
+			font-size: 17px;
+			text-align: left;
+			color: rgba(111,111,111,1);
+			line-height: 1.7em;
+		}
+			.error .error-contenedor .error-contenido a{
+				color: rgba(0,127,76,1);
+				-webkit-transition: color 0.4s ease-in-out 0s;
+				-moz-transition: color 0.4s ease-in-out 0s;
+				-o-transition: color 0.4s ease-in-out 0s;
+				-ms-transition: color 0.4s ease-in-out 0s;
+				transition: color 0.4s ease-in-out 0s;
+			}
+			.error .error-contenedor .error-contenido a:hover{
+				color: rgba(135,179,84,1);
+			}
+		.error .error-contenedor .error-boton{
+			width: 150px;
+			background-color: rgba(0,127,76,1);
+			color: rgba(255,255,255,1);
+			text-align: center;
+			padding: 10px 0px;
+			box-sizing: border-box;
+			font-size: 17px;
+			-webkit-transition: background-color 0.4s ease-in-out 0s;
+			-moz-transition: background-color 0.4s ease-in-out 0s;
+			-o-transition: background-color 0.4s ease-in-out 0s;
+			-ms-transition: background-color 0.4s ease-in-out 0s;
+			transition: background-color 0.4s ease-in-out 0s;
+			margin:40px 0px 0px 5%;
+		}
+		.error .error-contenedor .error-boton:hover{
+			background-color: rgba(135,179,84,1);
+		}
+/*======================================*/
+/*Iconos*/
+/*======================================*/
+.fcont_google:before{
+	margin:0px 5px;
+	font-family: 'icons';
+	content: "\f1a0";
+}
+.fcont_star:before{
+	margin:0px 3px;
+	font-family: 'icons';
+	content: "\f005";
+	color: rgba(231,113,27,1);
+	font-size: 0.9em;
+}
+/*Media*/
+@media (max-width: 800px) {
+	.desuscribir .desuscribir-contenedor{
+		width: 96%;
+	}
+		.desuscribir .desuscribir-contenedor .desuscribir-contenido{
+			font-size: 15px;
+		}
+	.error .error-contenedor{
+		width: 96%;
+	}
+		.error .error-contenedor .error-contenido{
+			font-size: 15px;
+		}
+	.encuesta .encuesta-contenedor{
+		width: 96%;
+	}
+	.encuesta .encuesta-contenedor .encuesta-pregunta .encuesta-pregunta-pregunta div{
+		width: 100%;
+		text-align: left;
+	}
+	.gracias .gracias-contenedor{
+		width: 96%;
+	}
+		.gracias .gracias-contenedor .gracias-contenido{
+			font-size: 15px;
+		}
+}

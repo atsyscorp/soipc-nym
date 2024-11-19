@@ -1,0 +1,86 @@
+/* CSS Document */
+/*----------------------------------------------------*/
+/*Fondos*/
+.bgcol_1
+{
+	background-color: #27A451;
+}
+.bgcol_2
+{
+    background-color: rgba(255,255,255,.60);
+}
+.bgcol_3
+{
+    background-color: rgba(255,255,255,1);
+}
+.bgcol_logo
+{
+	background-image:url(images/logo.png);
+	background-size: 100% auto;
+    background-repeat: no-repeat;
+	background-position: center;
+}
+.bgcol_fondo
+{
+	background-image:url(images/imFondo.jpg);
+	background-size: 100% 100%;
+    background-repeat: no-repeat;
+	background-position: center;
+}
+/*Delineados*/
+.dlin_1
+{
+	border-bottom:#FFFFFF solid 1px;
+}
+.dlin_2
+{
+	border-top:#FFFFFF solid 1px;
+}
+.dlin_3
+{
+	border:#FFFFFF solid 1px;
+}
+.dlin_4
+{
+	border:#27A451 solid 2px;
+}
+.dlin_5
+{
+	border:#27A451 solid 7px;
+}
+.drod_2
+{
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+}
+
+
+
+/*Fuentes*/
+.txgen_1
+{
+	font-family:Century Gothic, Arial, sans-serif;
+}
+.txwhite
+{
+	color:#FFFFFF;
+}
+.txgreen
+{
+	color: #01814E;
+}
+.txyellow
+{
+	color: #FFFF00;
+}
+.txgray
+{
+	color: #969696;
+}
+.txblack
+{
+	color:#505050;
+}
+
+

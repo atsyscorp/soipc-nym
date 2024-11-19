@@ -1,0 +1,2 @@
+[06-Nov-2020 12:44:03 America/Bogota] PHP Warning:  mysqli_query() expects parameter 1 to be mysqli, resource given in /home/soipcnym/public_html/siigo/api-report.php on line 34
+[06-Nov-2020 12:44:03 America/Bogota] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, resource given in /home/soipcnym/public_html/siigo/api-report.php on line 34
