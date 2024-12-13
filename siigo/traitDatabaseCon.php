@@ -1,16 +1,18 @@
 <?php
     require_once 'logger.php';
+    require_once '../inc/params.php';
 
     function connectToDatabase(){
+        global $db;
         $apiMode = 'production'; // Modo de la API: test | production
 
         // Configuración de la base de datos para los modos de producción y prueba
         $databaseConfig = array(
             'production' => array(
-                'host' => 'localhost',
-                'username' => 'nym_soipc',
-                'password' => 'Qot^V4h]sfI9',
-                'database' => 'nym_soipc'
+                'host' => $db['host'],
+                'username' => $db['user'],
+                'password' => $db['pass'],
+                'database' => $db['db']
             ),
             'test' => array(
                 'host' => 'localhost',

@@ -1,6 +1,8 @@
 <?php
 	error_reporting(E_ALL ^ E_NOTICE);
 	header('Content-Type: text/html; charset=utf-8');
+	date_default_timezone_set('America/Bogota');
+	
 	include("General.php");
 	//---------------------------------------------------
 	$var[1]=$_GET['var1']; //--> Usuario
@@ -10,8 +12,8 @@
 	ini_set('memory_limit', '2048M');
 	set_time_limit(0); 
 	//Captura variables
-	$sListId = date("Ymdhis");
-	date_default_timezone_set('America/Bogota');
+	
+	$sListId = date("YmdHis");
 	$sdate = date("Y-m-d");	
 	//-------------------------------------------------
 	//$file = fopen("https://www.treasury.gov/ofac/downloads/sdn.csv","r");
@@ -53,7 +55,7 @@
 						<div style="clear:both"></div>
 					</div>
 					<div style="margin-top:10px;" class="fcont">
-						<div class="bgcol_4 drod_1 dlin_3" style="margin-bottom:10px; padding:12px 7px; box-sizing:border-box">Total Registros: <span id="sRegs">Calclando...</span></div>
+						<div class="bgcol_4 drod_1 dlin_3" style="margin-bottom:10px; padding:12px 7px; box-sizing:border-box">Total Registros: <span id="sRegs">Calculando...</span></div>
 					</div>
 					<div id="dContinuar" style="display:none; margin-top:10px">
 						<input name="btaccept" id="btaccept" type="button" value="Regresar" class="btcont" style="width:90px;" onclick="Back_List('<?=$var[1]?>')" />
@@ -63,30 +65,41 @@
 						$icont = 0;
 						$iregs = 0;
 						while(! feof($file)){
-							$iregs++;
-							$icont++;
 							$freg = fgetcsv($file, 0, ',');
 							$regval = count($freg);
 							if($regval >= 2){	//Valida que no sea un registro raro
-								$strSQ2 = "INSERT INTO Lista_Clinton_1 VALUES('".$freg[0]."','".$freg[1]."','".str_replace("'","",str_replace("-","",str_replace(".", "", $freg[11])))."')";
-								mysqli_query($link, $strSQ2); 
+
+								$initialInput = str_replace(".", "", $freg[11]);
+								$initialInput = str_replace("-","",$initialInput);
+								$initialInput = str_replace("'","",$initialInput);
+
+								$initialName = str_replace("'",'', $freg[1]);
+
+								$strSQ2 = "INSERT INTO Lista_Clinton_1 VALUES ('".$freg[0]."', '".$initialName."', '".$initialInput."')";
+
+								mysqli_query($link, $strSQ2) or die(mysqli_error($link)); 
+								$iregs++;
+								$icont++;
+
 							}
 							//------------------------------------
 							//Contador de registros insertados
-							if($icont == 100){
+							if($icont == 100) {
 								$icont = 0;
-					?>
-					<script>
-						InnerCtr('sRegs', '<?=$iregs?>')
-				</script>
-					<? }} ?>
-					<?php
+								?>
+								<script>
+									InnerCtr('sRegs', '<?=$iregs?>')
+								</script>
+								<?php 
+							}
+						}
+
 						//Cierra archivo
 						fclose($file);
 						//----------------------------------------
 						//Hace registro en historia
 						$strSQ1 = "INSERT INTO Actualizaciones_Lista_Clinton VALUES('".$sListId."','".$var[1]."','".$sdate."','".$iregs."')";
-						mysqli_query($link, $strSQ1); 
+						mysqli_query($link, $strSQ1) or die(mysqli_error($link));
 					?>
 				</div>
 			</div>

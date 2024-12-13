@@ -3,9 +3,11 @@ $apiMode = 'production'; //test | production
 $createClientPayloadJson = "";
 $link = null;
 
+require '../inc/params.php';
+
 if ($apiMode == 'production') {
     // Conexión a la base de datos de producción
-    $link = mysqli_connect("localhost","nym_soipc","Qot^V4h]sfI9","nym_soipc");
+    $link = mysqli_connect($db['host'],$db['user'],$db['pass'],$db['db']);
 } else {
     // Conexión a la base de datos de prueba
     $link = mysqli_connect("localhost", "root", "", "nym_soipc");

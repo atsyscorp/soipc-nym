@@ -31,8 +31,8 @@
             'apellidos' => $apellido
         ];
     }
-    
-    foreach ($invoiceIds as $invoiceId) {    
+
+    foreach ($invoiceIds as $invoiceId) {
         unset($datosFactura, $dataPerson, $codigoCiudad, $codigoDocDian, $errorMessage, $clientJsonPayload, $siigoClient, $invoiceData);
         // Optener datos de la factura por invoiceId y beneficiario por documento
         $datosFactura = getOpVentanillaData($link, $invoiceId); // entra a consultar los datos de la factura
@@ -54,7 +54,7 @@
 		do {
             $clienteResponse = checkCliente($datosFactura['Documento_Beneficiario'], $authToken);
             $codigoValidacion = validarRespuestaSiigo($clienteResponse);
-            echo "<script>console.log(' checkCliente respuesta: " . addslashes($clienteResponse) . " ');</script>";
+            echo "<script>console.log(' checkCliente respuesta: " . ((isset($clienteResponse)) ? addslashes($clienteResponse) : '') . " ');</script>";
             switch ($codigoValidacion) {
                 case 0:
                     echo "<script>console.log(' exitosa ');</script>";
@@ -147,7 +147,8 @@
         $clientJsonPayload = json_encode($ClientPayload);
         mail('soporte@atsys.co','ClientPayload',var_export($ClientPayload, true));
         echo "<script>console.log('Payload de cliente: " . addslashes(json_encode($clientJsonPayload)) . " ');</script>";
-        
+
+        mail('soporte@atsys.co', '$totalResult', $totalResult);
         if ($totalResults == 0) {
             $max_retries = 3;
             $retries = 0;
@@ -202,6 +203,7 @@
             do {
                 $updateResponse = updateCliente($clienteResponse['results'][0]['id'], $clientJsonPayload, $authToken);
                 echo "<script>console.log(' respuesta actualizacion cliente: " . addslashes(json_encode($updateResponse)) . " ');</script>";
+                mail('');
         
                 $codigoValidacion = validarRespuestaSiigo($updateResponse);
         
@@ -212,7 +214,7 @@
                         break 2;
                     case 1:
                         // Reintentar la petición
-                        if ($retries < $max_retries) {
+                        if ($retries < $max_retries) { // 
                             echo "<script>console.log(' haciendo reintento ');</script>";
                             $message = $updateResponse['Errors'][0]['Message'];
                             $start = strpos($message, "Try again in") + 12;
@@ -224,7 +226,7 @@
                         } else {
                             echo "<script>console.log(' agoto los reintentos ');</script>";
                             $lastUpdate = date("Y-m-d H:i:s");
-                            $errorMessage = "actualizar cliente error en factura : " .$invoiceId ."  -  " .addslashes(json_encode($updateResponse));
+                            $errorMessage = "Reintentos agotados - actualizar cliente error en factura : " .$invoiceId ."  -  " .addslashes(json_encode($updateResponse));
                             writeLog($errorMessage);
                             $updateResult = setInvoiceStatus($link, 'Error', $lastUpdate, $errorMessage, $invoiceId);
                             break 2; // Salir del bucle actual y continuar con la siguiente factura
@@ -233,7 +235,7 @@
                     case 2:
                         echo "<script>console.log(' error general 4xx ');</script>";
                         $lastUpdate = date("Y-m-d H:i:s");
-                        $errorMessage = "actualizar cliente error en factura : " .$invoiceId ."  -  " . addslashes(json_encode($updateResponse));
+                        $errorMessage = "Error 4xx - actualizar cliente error en factura : " .$invoiceId ."  -  " . addslashes(json_encode($updateResponse));
                         writeLog($errorMessage);
                         $updateResult = setInvoiceStatus($link, 'Error', $lastUpdate, $errorMessage, $invoiceId);
                         break 3; // Salir del bucle actual y continuar con la siguiente factura
@@ -297,6 +299,7 @@
             ),
         );
         var_dump($invoiceData);
+        mail('soporte@atsys.co','invoiceData',var_export($invoiceData,true));
         $invoiceJsonPayload = json_encode($invoiceData);
         echo $invoiceJsonPayload;
         echo "<script>console.log('Payload de invoice: " . $invoiceJsonPayload . " ');</script>";  

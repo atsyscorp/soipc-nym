@@ -2,6 +2,7 @@
 //Archivo clases generales
 error_reporting(E_ALL ^ E_NOTICE);
 header('Content-Type: text/html; charset=utf-8');
+require_once 'inc/params.php';
 //---------------------------------------------------------------------
 //Variables Publicas
 $sCaja; //Numero de caja
@@ -18,50 +19,21 @@ $sUserAcces; //Niveles de acceso
 //Bloque para llamado de funciones
 $sFun = (isset($_GET['sFun'])) ? $_GET['sFun'] : '';
 switch ($sFun){
-	case "RegCount":
-		$calFun = RegCount();
-		break;
-	case "Gen_Accept":
-		$calFun = Gen_Accept();
-		break;
-	case "Gen_Find":
-		$calFun = Gen_Find();
-		break;
-	case "Gen_Find_Field":
-		$calFun = Gen_Find_Field();
-		break;
-	case "Gen_Find_Field_Clinton":
-		$calFun = Gen_Find_Field_Clinton();
-		break;
-	case "Gen_Modif":
-		$calFun = Gen_Modif();
-		break;
-	case "Gen_Delete":
-		$calFun = Gen_Delete();
-		break;
-	case "ActCaja":
-		$calFun = ActCaja();
-		break;
-	case "AddSerie":
-		$calFun = AddSerie();
-		break;
-	case "AddSerieNew":
-		$calFun = AddSerieNew();
-		break;
-	case "Gen_Update_Field":
-		$calFun = Gen_Update_Field();
-		break;
-	case "SiplaOps":
-		$calFun = SiplaOps();
-		break;
-	case "AddCorreo":
-		$calFun = AddCorreo();
-		break;
-	case "SaveInvoiceToSend":
-		$calFun = SaveInvoiceToSend();
-		break;
-
-
+	case "RegCount": $calFun = RegCount(); break;
+	case "Gen_Accept": $calFun = Gen_Accept(); break;
+	case "Gen_Find": $calFun = Gen_Find(); break;
+	case "Gen_Find_Field": $calFun = Gen_Find_Field(); break;
+	case "Gen_Find_Field_Clinton": $calFun = Gen_Find_Field_Clinton(); break;
+	case "Gen_Modif": $calFun = Gen_Modif(); break;
+	case "Gen_Delete": $calFun = Gen_Delete(); break;
+	case "ActCaja": $calFun = ActCaja(); break;
+	case "AddSerie": $calFun = AddSerie(); break;
+	case "AddSerieNew": $calFun = AddSerieNew(); break;
+	case "Gen_Update_Field": $calFun = Gen_Update_Field(); break;
+	case "SiplaOps": $calFun = SiplaOps(); break;
+	case "AddCorreo": $calFun = AddCorreo(); break;
+	case "SaveInvoiceToSend": $calFun = SaveInvoiceToSend(); break;
+	case "SaveInErrorLog": $calFun = SaveInErrorLog(); break;
 	default:
 }
 //-----------------------------------------------------------------
@@ -72,11 +44,12 @@ $GLmilsepa = ',';
 //Funcion de conexion a base de datos
 function Conectarse()
 {
-    if (!($link=mysqli_connect("localhost","nym_soipc","Qot^V4h]sfI9"))) {
+	global $db;
+    if (!($link=mysqli_connect($db['host'], $db['user'], $db['pass']))) {
       echo "Error conectando a la base de datos.";
       exit();
     }
-    if (!mysqli_select_db($link, "nym_soipc")) {
+    if (!mysqli_select_db($link, $db['db'])) {
       echo "Error seleccionando la base de datos.";
       exit();
     }
@@ -160,7 +133,7 @@ function GenSet($link)
 //Funcion de carga de configuracion de usuario
 function GetUser($link, $sId)
 {
-	$p=mysqli_query($link, "SELECT * FROM Usuarios WHERE Identificacion = '$sId'") or die(mysqli_error($link));
+	$p = mysqli_query($link, "SELECT * FROM Usuarios WHERE Identificacion = '$sId'") or die(mysqli_error($link));
 	while($n=mysqli_fetch_array($p)){
 		global $sUserName;	
 		global $sUserCargo;	

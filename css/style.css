@@ -585,3 +585,9 @@ a:hover
 	box-sizing:border-box;
 	float:left;
 }
+.api-report-data-tr:nth-child(even){
+	background:#EAEAEA;
+}
+.api-report-data-tr:nth-child(odd){
+	background:#ffffff;
+}

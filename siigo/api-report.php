@@ -2,13 +2,14 @@
     if($_SERVER['REQUEST_METHOD'] !== 'POST') {
 	    header('Content-Type: text/html; charset=utf-8');
     }
+	require '../inc/params.php';
 	error_reporting(E_ALL ^ E_NOTICE);
 	//----------------------------------------------------
 	ini_set('memory_limit', '2048M');
 	set_time_limit(0);
 	//----------------------------------------------------
 
-	if (!($link=mysqli_connect("localhost","nym_soipc","Qot^V4h]sfI9","nym_soipc"))){
+	if (!($link=mysqli_connect($db['host'],$db['user'],$db['pass'],$db['db']))){
 		echo "Error conectando a la base de datos.";
 		exit();
 	}
@@ -56,15 +57,16 @@
 	$currentPage = isset($_GET['repage']) ? $_GET['repage'] : 1;
 	*/
 
-	// Calcular el �ndice inicial y final de los registros a mostrar en la p�gina actual
+	// Calcular el índice inicial y final de los registros a mostrar en la página actual
 	//$offset = ($currentPage - 1) * $limit;
 	//$indiceFinal = $offset + $limit - 1;
 
 	$strSQ0 = "SELECT Factura_Electronica.*, Operacion_Ventanilla.Fecha, Operacion_Ventanilla.Hora FROM Factura_Electronica ";
 	$strSQ0.= "LEFT JOIN Operacion_Ventanilla ON Factura_Electronica.InvoiceId = Operacion_Ventanilla.Identificacion ";
-	$strSQ0.= "WHERE 1 AND Operacion_Ventanilla.Fecha='".$repDate."'";
+	$strSQ0.= "WHERE 1";
+	$strSQ0.= " AND Operacion_Ventanilla.Fecha='".$repDate."'";
 	$strSQ0.= (!empty($_REQUEST['repstatus'])) ? " AND Factura_Electronica.SendStatus='".$_REQUEST['repstatus']."'" : NULL;
-	$strSQ0.= "ORDER BY Factura_Electronica.RowId ASC";
+	$strSQ0.= " ORDER BY Factura_Electronica.RowId ASC";
 	$p0 = mysqli_query($link, $strSQ0) or die(mysqli_error($link));
 	$countResults = mysqli_num_rows($p0);
 ?>
@@ -104,7 +106,7 @@
 	<?php
 	    /*
 	    echo '<div class="pagination_line">';
-	        echo '<div>P�ginas:</div>';
+	        echo '<div>Páginas:</div>';
     		echo '<div class="pagination">';
         		for ($i = 1; $i <= $totalPages; $i++) {
         			echo '<a href="'.$_SERVER['PHP_SELF'].'?repage=' . $i . '&repdate='.$_REQUEST['repdate'].'&replimit='.$_REQUEST['replimit'].'">' . $i . '</a> ';
@@ -119,20 +121,20 @@
 	<table class="tbl_result">
 		<thead>
 			<tr class="bgcol_6 fwhite">
-				<th class="celrow" style="width: 180px; text-overflow:visible;">Identificación de Registro</th>
-				<th class="celrow" style="width: 120px; text-overflow:visible;">Identificación Factura</th>
-				<th class="celrow" style="width: 120px; text-overflow: clip;">Tipo de Proceso</th>
-				<th class="celrow" style="width: 120px; text-overflow:visible;">Estado de Envío</th>
-				<th class="celrow" style="width: 120px; text-overflow:visible;">Fecha de factura</th>
-				<th class="celrow" style="width: 120px; text-overflow:visible;">Última Actualización</th>
-				<th class="celrow" style="width: 250px; text-overflow:visible;">Respuesta Api SIIGO</th>
+				<th class="celrow" style="text-overflow:visible;">Identificación de Registro</th>
+				<th class="celrow" style="text-overflow:visible;">Identificación Factura</th>
+				<th class="celrow" style="text-overflow:clip;">Tipo de Proceso</th>
+				<th class="celrow" style="text-overflow:visible;">Estado de Envío</th>
+				<th class="celrow" style="text-overflow:visible;">Fecha de factura</th>
+				<th class="celrow" style="text-overflow:visible;">Última Actualización</th>
+				<th class="celrow" style="text-overflow:visible;">Respuesta Api SIIGO</th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php
 				while($q0=mysqli_fetch_array($p0)){
 			?>
-			<tr<?=($q0['SendStatus'] == 'Error') ? ' style="background:#ffc4c4;"' : NULL?>>
+			<tr class="api-report-data-tr"<?=($q0['SendStatus'] == 'Error') ? ' style="background:#ffc4c4;"' : NULL?>>
 				<td class="celrow"><?=$q0['RowId']?></td>
 				<td class="celrow"><?=$q0['InvoiceId']?></td>
 				<td class="celrow"><?=$q0['SendProcess']?></td>
@@ -143,7 +145,7 @@
 				    if(preg_match('/invalid_date/', $q0['ApiResponse'])) {
 				        echo 'Establecer nueva fecha:<br><input type="date" name="invoice_date[]" class="input_upd_date" data-invoice="'.$q0['InvoiceId'].'" value="'.date('Y-m-d').'">';
 				    } else {
-				        echo $q0['ApiResponse'];    
+				        echo $q0['ApiResponse'];
 				    }
 				    
 				?></td>

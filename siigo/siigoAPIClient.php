@@ -19,7 +19,13 @@
             case 'POST':
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-                break;
+
+                // Agregada idempotencia, esto para que se asegure de que solo hay una petición única por cliente y factura.
+                $idempotencyKey = md5('NYM-'.time().'-'.rand(10000,999999));
+                if($endpoint === 'invoices') {
+                    array_push($headers, 'Idempotency-Key: ' . $idempotencyKey);
+                }
+            break;
             case 'PUT':
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
@@ -36,6 +42,8 @@
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0); // Time to connect: No limit
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60); // Time response max
     
         $response = curl_exec($ch);
     
@@ -94,22 +102,29 @@
     function createInvoiceClient($payload,$authToken) {
         // URL de la API de Siigo
         $url = 'https://api.siigo.com/v1/invoices';
+
+        // Agregada idempotencia, esto para que se asegure de que solo hay una petición única por cliente y factura.
+        $idempotencyKey = md5('NYM-'.time().'-'.rand(10000,999999));
         
         // Configuración de la solicitud
-        $headers = array(
+        $headers = [
             'Content-Type: application/json',
             'Authorization: Bearer ' . $authToken,
-        );
+            'Idempotency-Key: ' . $idempotencyKey
+        ];
         
         // Iniciar sesión CURL y configurar la solicitud POST
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        
+        $opt = [
+            CURLOPT_URL => $url,
+            CURLOPT_POST => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_POSTFIELDS => $payload,
+            CURLOPT_SSL_VERIFYPEER => false,
+        ];
+        curl_setopt_array($ch, $opt);
+
         // Ejecutar la solicitud y obtener la respuesta
         $response = curl_exec($ch);
         
@@ -151,31 +166,33 @@
                 'username' => 'siigoapi@pruebas.com',
                 'access_key' => 'OWE1OGNkY2QtZGY4ZC00Nzg1LThlZGYtNmExMzUzMmE4Yzc1Omt2YS4yJTUyQEU='
             );
-        }else{
+        } else {
             $data = array(
                 'username' => 'gerencia@newyorkmoney.com.co',
                 'access_key' => 'ZWUxMjBhOTYtOGVjNC00OWM1LTk0NDAtOTE3NGQyOTAzNjU3OipqNmdYc3tCdEY='
             );
         }
-        //convierte el arrray en JsonPayload
+        // Convierte el arrray en JsonPayload
         $data_json = json_encode($data);
-        //Preparar preticion CURL
+
+        // Preparar preticion CURL
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_json))
-        );
-    
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    
+        $opt = [
+            CURLOPT_URL => $url,
+            CURLOPT_POST => 1,
+            CURLOPT_POSTFIELDS => $data_json,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data_json)
+            ],
+            CURLOPT_SSL_VERIFYPEER => false
+        ];
+
+        curl_setopt_array($ch, $opt);
         $response = curl_exec($ch);
-    
         curl_close($ch);
-    
+
         if (!$response) {
             return null;
         } else {
@@ -187,6 +204,7 @@
     function validarRespuestaSiigo($respuesta) {
         if (isset($respuesta['Status']) && isset($respuesta['Errors'])) {
             $status = $respuesta['Status'];
+
             if ($status == 429) {
                 return 1;  // Reintentar la petición
             } elseif ($status == 400 && ($respuesta['Errors'][0]['Code'] === 'already_exists' || $respuesta['Errors'][0]['Code'] === 'duplicated_document') ) {
