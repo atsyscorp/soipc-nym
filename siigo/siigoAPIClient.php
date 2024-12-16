@@ -4,18 +4,18 @@
         $baseURL ='https://api.siigo.com/v1/';
         $url = $baseURL . $endpoint;
     
-        $headers = array(
+        $headers = [
             'Content-Type: application/json',
             'Authorization: Bearer ' . $authToken,
             'Partner-ID: SOIPCNYM'
-        );
+        ];
     
         $ch = curl_init($url);
     
         switch ($method) {
             case 'GET':
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-                break;
+            break;
             case 'POST':
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
@@ -29,11 +29,11 @@
             case 'PUT':
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-                break;
+            break;
             case 'PATCH':
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-                break;
+            break;
             default:
                 // Método no soportado
                 return false;
@@ -83,10 +83,10 @@
 
     function createCliente($clientJsonPayload, $authToken) {
         $endpoint = "customers";
-    
+
         $response = siigoRequest($endpoint, 'POST', $clientJsonPayload, $authToken);
         $responseArray = json_decode($response, true);
-    
+
         return $responseArray;
     }
     
@@ -116,18 +116,18 @@
         // Iniciar sesión CURL y configurar la solicitud POST
         $ch = curl_init();
         $opt = [
-            CURLOPT_URL => $url,
-            CURLOPT_POST => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_POSTFIELDS => $payload,
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_URL             => $url,
+            CURLOPT_POST            => true,
+            CURLOPT_RETURNTRANSFER  => true,
+            CURLOPT_HTTPHEADER      => $headers,
+            CURLOPT_POSTFIELDS      => $payload,
+            CURLOPT_SSL_VERIFYPEER  => false,
         ];
         curl_setopt_array($ch, $opt);
 
         // Ejecutar la solicitud y obtener la respuesta
         $response = curl_exec($ch);
-        
+
         // Verificar si se produjo un error en la solicitud
         if (curl_errno($ch)) {
             $errorMessage = curl_error($ch);
@@ -221,5 +221,14 @@
         return 2;  // En caso de que no se cumpla ninguna condición anterior, asumir error entre 400 y 415
     }
 
+    function getElectronicInvoice($invoice_id, $authToken) {
+
+        $response = siigoRequest("invoices/$invoice_id", "GET", null, $authToken);
+        $responseArray = json_decode($response, true);
+
+        // Verificar si se encontró al cliente
+        return $responseArray;
+
+    }
 
 ?>

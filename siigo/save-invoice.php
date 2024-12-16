@@ -33,35 +33,58 @@
     }
 
     foreach ($invoiceIds as $invoiceId) {
+
+        // Elimina datos antiguos de variables si fueron declarados.
         unset($datosFactura, $dataPerson, $codigoCiudad, $codigoDocDian, $errorMessage, $clientJsonPayload, $siigoClient, $invoiceData);
+
         // Optener datos de la factura por invoiceId y beneficiario por documento
         $datosFactura = getOpVentanillaData($link, $invoiceId); // entra a consultar los datos de la factura
-		$dataPerson = getClienteData($link, $datosFactura['Documento_Beneficiario']); //
-        //Obtiene codigos para hacer match son siigo api
+
+        // Obtener datos de cliente
+		$dataPerson = getClienteData($link, $datosFactura['Documento_Beneficiario']);
+
+        // Obtener codigos para hacer match son siigo api
         $codigoCiudad = getCodigoCiudad($link, $dataPerson['Ciudad'], $dataPerson['Departamento']);
+
+        // Obtener codigo DIAN
         $codigoDocDian = getCodigoDocDian($link, $dataPerson['Tipo_Documento']);
+
         // Verificar si alguna de las consultas falló o no encontró datos
         if (!$datosFactura || !$dataPerson || !$codigoCiudad || !$codigoDocDian) {
             $errorMessage = "Error obteniendo los datos necesarios de la base de datos para la factura ID: " . $invoiceId;
-            writeLog($errorMessage);
+            writeLog($errorMessage, "error");
             continue;
         }
         
+        // Dar salida a la consola de Javascript
         echo "<script>console.log('datos de factura: " . json_encode($datosFactura) . "');</script>";
         echo "<script>console.log('datos del beneficiario: " . json_encode($dataPerson) . "');</script>";
+        
+        // Establecer número de reintentos máximos e inicial.
         $max_retries = 6;
 		$retries = 0;
+
 		do {
+
+            // Comprobar cliente
             $clienteResponse = checkCliente($datosFactura['Documento_Beneficiario'], $authToken);
+
+            // Validar respuesta de SIIGO
             $codigoValidacion = validarRespuestaSiigo($clienteResponse);
+
+            // Imprimir salida en el navegador
             echo "<script>console.log(' checkCliente respuesta: " . ((isset($clienteResponse)) ? addslashes($clienteResponse) : '') . " ');</script>";
+
+            // Ejecutar acción según el caso.
             switch ($codigoValidacion) {
-                case 0:
+                case 0: // Sin problemas
                     echo "<script>console.log(' exitosa ');</script>";
-                    break 2;
-                case 1:
-                    // Reintentar la petición
+                break 2; // Sale de la operación y de la estructura anidada 2
+                case 1: // Reintentar
+
                     if ($retries < $max_retries) {
+
+                        // Si hay reintentos por debajo del limite permitido
                         echo "<script>console.log(' reintento ');</script>";
                         $message = $clienteResponse['Errors'][0]['Message'];
                         $start = strpos($message, "Try again in") + 12;
@@ -70,29 +93,44 @@
                         sleep($seconds);
                         $retries++;
                         break;
+
                     } else {
+
+                        // No hay mas reintentos
                         echo "<script>console.log('sin reintentos');</script>";
                         $lastUpdate = date("Y-m-d H:i:s");
                         $errorMessage = "buscar de cliente error en factura : " .$invoiceId ."  -  " . addslashes($clienteResponse['Errors'][0]);
                         writeLog($errorMessage);
                         $updateResult = setInvoiceStatus($link, 'Error', $lastUpdate, $errorMessage, $invoiceId);
                         break 2; // Salir del bucle actual y continuar con la siguiente factura
+
                     }
-                    break;
-                case 2:
+
+                break;
+                case 2: // Surgió un error
+
                     echo "<script>console.log('error general 4xx');</script>";
                     $lastUpdate = date("Y-m-d H:i:s");
                     $errorMessage = "buscar de cliente error en factura : " .$invoiceId ."  -  " . addslashes($clienteResponse['Errors'][0]);
                     writeLog($errorMessage);
                     $updateResult = setInvoiceStatus($link, 'Error', $lastUpdate, $errorMessage, $invoiceId);
-                    break 2; // Salir del bucle actual y continuar con la siguiente factura
-                case 3:
+                
+                break 2; // Salir del bucle actual y continuar con la siguiente factura
+                case 3: // Error en la ejecución por parte de SIIGO o generado por este archivo
+
                     echo "<script>console.log('error ejecucion 5xx');</script>";
-                    exit();
-                case 4:
+                    writeLog("Error 5xx " . json_encode($clienteResponse['Errors'][0]), 'error');
+                    exit(); // Finaliza la ejecución
+                
+                break 2;
+                case 4: // Si ya existe la factura
+
+                    writeLog("Error 4: Factura ya existe", 'error');
                     echo "<script>console.log('already exist');</script>";
-                    break 2;
+
+                break 2;
             }
+
         } while ($retries <= $max_retries);
 
         if ($codigoValidacion==2) {
@@ -104,7 +142,7 @@
 
         // Obtener person type y nombre correctos para NI si esel caso
         $person_type = ($dataPerson['Tipo_Documento'] == 'NI') ? 'Company' : 'Person';
-        if ($person_type == 'Company') {
+        if ($person_type === 'Company') {
             $name = array($dataPerson['Nombre_Completo']);
             $grpDecl = determineName($datosFactura["Nombre_Declarante"]);
 
@@ -126,24 +164,27 @@
         }
         
         // Crear el payload del cliente según el tipo de persona
-        $ClientPayload = array(
-            "person_type" => $person_type,
-            "id_type" => $codigoDocDian['Codigo_DIAN'],
-            "identification" => $dataPerson["Identificacion"],
-            "name" => $name,
-            "address" => array(
-                "address" => $dataPerson["Direccion"],
-                "city" => array(
-                    "country_code" => "CO",
-                    "state_code" => substr($codigoCiudad['Codigo'], 0, 2),
-                    "city_code" => $codigoCiudad['Codigo']
-                )
-            ),
-            "phones" => array(
-                array("number" => $datosFactura["Telefono"])
-            ),
-            "contacts" => $contacts
-        );
+        $ClientPayload = [
+            "person_type"       => $person_type,
+            "id_type"           => $codigoDocDian['Codigo_DIAN'],
+            "identification"    => $dataPerson["Identificacion"],
+            "name"              => $name,
+            "address"           => [
+                "address"   => $dataPerson["Direccion"],
+                "city"      => [
+                    "country_code"  => "CO",
+                    "state_code"    => substr($codigoCiudad['Codigo'], 0, 2),
+                    "city_code"     => $codigoCiudad['Codigo']
+                ]
+            ],
+            "phones"            => [
+                [
+                    "number"    => $datosFactura["Telefono"]
+                ]
+            ],
+            "contacts"          => $contacts
+        ];
+
         $clientJsonPayload = json_encode($ClientPayload);
         mail('soporte@atsys.co','ClientPayload',var_export($ClientPayload, true));
         echo "<script>console.log('Payload de cliente: " . addslashes(json_encode($clientJsonPayload)) . " ');</script>";
@@ -153,15 +194,17 @@
             $max_retries = 3;
             $retries = 0;
             do {
+
                 $createResponse = createCliente($clientJsonPayload, $authToken);
                 mail('soporte@atsys.co','$createResponse',var_export($createResponse,true));
                 echo "<script>console.log(' respuesta creacion cliente: " . addslashes(json_encode($createResponse)) . " ');</script>";
+
                 $codigoValidacion = validarRespuestaSiigo($createResponse);
                 switch ($codigoValidacion) {
                     case 0:
                         echo "<script>console.log('creación cliente exitosa ');</script>";
                         $siigoClient = $createResponse;
-                        break 2;
+                    break 2;
                     case 1:
                         if ($retries < $max_retries) {
                             echo "<script>console.log(' haciendo reintento ');</script>";
@@ -251,7 +294,8 @@
                 continue;
             }
         }
-        // creacion del payload de la factura para siigo
+
+        // Creacion del payload de la factura para siigo
         $invoiceData = array(
             "document" => array(
                 "id" => $docCodes[$datosFactura['Sucursal']] 
@@ -319,7 +363,7 @@
                     // Realizar acciones correspondientes
                     echo "<script>console.log('Respuesta factura: " . addslashes(json_encode($responseInvoice)) . "');</script>";
                     $lastUpdate = date("Y-m-d H:i:s");
-                    $errorMessage = "";
+                    $errorMessage = json_encode($responseInvoice);
                     $updateResult = setInvoiceStatus($link, 'Enviada', $lastUpdate, $errorMessage, $invoiceId);
                     break 2;
                 case 1:

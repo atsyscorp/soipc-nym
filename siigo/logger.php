@@ -1,10 +1,15 @@
 <?php
 
+    if(!isset($db)) {
+        require_once '../inc/params.php';
+    }
+
     // Función para insertar factura para integración SIIGO
     function SaveInErrorLog($Tipo, $Mensaje, $Iniciador) {
+        global $db;
         $link = mysqli_connect($db['host'], $db['user'], $db['pass'], $db['db']);
         $sql = "INSERT INTO Error_Log SET `Tipo`=?, `Mensaje`=?, Iniciador=?, Fecha=NOW()";
-        $stmt = mysqli_prepare($link, $link);
+        $stmt = mysqli_prepare($link, $sql);
 
         mysqli_stmt_bind_param($stmt, "sss", $Tipo, $Mensaje, $Iniciador);
         mysqli_stmt_execute($stmt);
@@ -20,7 +25,7 @@
     }
 
     // Función para escribir logs en un archivo
-    function writeLog($message)
+    function writeLog($message, $type='info')
     {
         $logFile = 'logs.txt'; // Nombre del archivo de logs
         $timestamp = date('[Y-m-d H:i:s]'); // Fecha y hora actual
@@ -29,7 +34,7 @@
         $logMessage = $timestamp . ' ' . $message . PHP_EOL;
 
         // Establecer conexión con la base de datos para registrar el error
-        $eLog = SaveInErrorLog('info', $message, $_SERVER['PHP_SELF']);
+        $eLog = SaveInErrorLog($type, $message, $_SERVER['PHP_SELF']);
 
         // Abre el archivo en modo append (agregar contenido al final)
         $file = fopen($logFile, 'a');
