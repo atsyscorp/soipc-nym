@@ -46,19 +46,21 @@
 	$sDCMs = '';
 	$sSerie1 = ReadSerie_1($link, "Select Consecutivo From XConf_Consecutivos Where Codigo ='141' AND Sucursal = '". $var[4]. "'");
 	//terminación de conseuctivo
-	if(is_numeric($sTaxSet[3]))
-	{
-		$dVen = $sTaxSet[3] - $sSerie1;
-		if($dVen <= 100)
+	if(isset($sTaxSet)) {
+		if(is_numeric($sTaxSet[3]))
 		{
-			$sDCMs = "<b>Llegando al límite de numeración autorizada. ". $dVen. " facturas restantes.</b>";
-            $DoCoC = 'SI';
-        }
-	}	
+			$dVen = $sTaxSet[3] - $sSerie1;
+			if($dVen <= 100)
+			{
+				$sDCMs = "<b>Llegando al límite de numeración autorizada. ". $dVen. " facturas restantes.</b>";
+				$DoCoC = 'SI';
+			}
+		}	
+	}
 	//Fecha de resolucion
    	$ahora = time();
    	$date = date_create($ahora);
-	$feccrea = $sTaxSet[5];		
+	$feccrea = isset($sTaxSet) ? $sTaxSet[5] : NULL;
 	$datef = strtotime($feccrea);
 	$ddiff = intval(($datef - $ahora)/ (60*60*24));	//Calcula diferencia de fechas
 	if($ddiff <= 5){

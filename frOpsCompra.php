@@ -289,11 +289,11 @@
 				</div>
 			</div>
 		</div>
-		<?
-			for ($i = 1; $i <= $sTaxSet[1]; $i++) {	//Esto se hace por que no se puede imprimir window.print desde loop en javascript
-		?>
-	    <iframe name="frPrint<?=$i?>" id="frPrint<?=$i?>" align="left" frameborder="0" style="width:0px; height:0px;" src=""></iframe>
-		<? } ?>
+		<?php if(isset($sTaxSet)) { ?>
+			<?php for ($i = 1; $i <= $sTaxSet[1]; $i++) {	//Esto se hace por que no se puede imprimir window.print desde loop en javascript ?>
+				<iframe name="frPrint<?=$i?>" id="frPrint<?=$i?>" align="left" frameborder="0" style="width:0px; height:0px;" src=""></iframe>
+			<?php } ?>
+		<?php } ?>
 	</div>
 </div>
 </body>
