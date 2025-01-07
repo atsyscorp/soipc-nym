@@ -350,6 +350,7 @@ function Go_Client(sSuc, sCaja, sUser, sDec, sBen)
 
 //-----------------------------------------------
 //Funcion para calcular operacion
+/*
 function cmCOOCalc_Click()
 {
 	//Validaciones
@@ -459,6 +460,98 @@ function cmCOOCalc_Click()
 	}
 	
 
+}
+*/
+function cmCOOCalc_Click()
+{
+	//Validaciones
+	//Seleccion de moneda
+	if(document.getElementById("tx34").value == ''){
+		viscap('dbloc');
+		dmsshowc("drod_1 dlin_5 bgcol_3", "falert", "hidden", "hidcap('dMsj" + 1 + "'); hidcap('dbloc')", "", "Seleccione una moneda que se encuentre dentro de las opciones del control.", 1);
+		return false;
+	}
+	//Valida precio sin iva
+	if(document.getElementById("tx35").value == '' || document.getElementById("tx35").value == '0'){
+		viscap('dbloc');
+		dmsshowc("drod_1 dlin_5 bgcol_3", "falert", "hidden", "hidcap('dMsj" + 1 + "'); hidcap('dbloc')", "", "El precio sin IVA no es válido. Verifique la información.", 1);
+		return false;
+	}
+	//Valida precio con IVa
+	if(document.getElementById("tx36").value == '' || document.getElementById("tx36").value == '0'){
+		viscap('dbloc');
+		dmsshowc("drod_1 dlin_5 bgcol_3", "falert", "hidden", "hidcap('dMsj" + 1 + "'); hidcap('dbloc')", "", "El precio con IVA no es válido. Verifique la información.", 1);
+		return false;
+	}
+	//Valida precio con iva >= precio sin iva
+	if(document.getElementById("tx35").value > document.getElementById("tx36").value){
+		viscap('dbloc');
+		dmsshowc("drod_1 dlin_5 bgcol_3", "falert", "hidden", "hidcap('dMsj" + 1 + "'); hidcap('dbloc')", "", "El precio de compra sin IVA no puede ser mayor al precio con IVA.", 1);
+		return false;
+	}
+	//Valida cantidad diferente de cero
+	if(document.getElementById("tx37").value == '' || document.getElementById("tx37").value == '0'){
+		viscap('dbloc');
+		dmsshowc("drod_1 dlin_5 bgcol_3", "falert", "hidden", "hidcap('dMsj" + 1 + "'); hidcap('dbloc')", "", "La cantidad de divisa no es válida. Verifique la información.", 1);
+		return false;
+	}
+	//Valida tasa de retención y base de retención
+	if(document.getElementById("cbOVRteTax").value != '0' && document.getElementById("cbOVRteBase").value == 'NINGUNO'){
+		viscap('dbloc');
+		dmsshowc("drod_1 dlin_5 bgcol_3", "falert", "hidden", "hidcap('dMsj" + 1 + "'); hidcap('dbloc')", "", "Si la tasa de retención es diferente de cero, la base debe ser diferente de NINGUNO.", 1);
+		return false;
+	}
+	//-----------------------------------------
+	//Hace cálculo de valor de operación en USD
+	if(document.getElementById("tx34").value != 'USD')
+	{
+		viscap('dWait');
+		var ssuc = document.getElementById("tx4").value;
+		var scaja = document.getElementById("tx5").value;
+		var strSQL = "Select Precio_Compra From Tasas Where Moneda='USD' AND Sucursal='" + ssuc + "' AND Estacion ='01'";
+		var sPrUsd = GenConretField('General', 'Gen_Find_Field', strSQL, false);
+		if(sPrUsd != '0')
+		{
+	        var sPrIva = DelMilsepa(document.getElementById("tx36").value);
+			var sCant = DelMilsepa(document.getElementById("tx37").value);
+			document.getElementById("tx39").value = Math.round((parseFloat(sPrIva) / parseFloat(sPrUsd)) * parseFloat(sCant));
+			txChange_Num("tx39");
+		} else {
+			document.getElementById("tx39").value = document.getElementById("tx37").value;
+		}
+		hidcap('dWait');
+	} else {
+		document.getElementById("tx39").value = document.getElementById("tx37").value;
+	}
+	//-----------------------------------------
+	//Calculos
+    //Subtotal
+	var sPrSin = DelMilsepa(document.getElementById("tx35").value);
+	var sPrIva = DelMilsepa(document.getElementById("tx36").value);
+	var sCant = DelMilsepa(document.getElementById("tx37").value);
+	document.getElementById("tx38").value = NumFormProp(Math.round(parseFloat(sPrSin) * parseFloat(sCant)));
+    //Iva descontable
+	document.getElementById("tx42").value = NumFormProp(((parseFloat(sPrIva) - parseFloat(sPrSin)) * parseFloat(sCant)).toFixed(2));
+    //Valor retención
+	if(document.getElementById("cbOVRteBase").value == 'MARGEN')
+	{
+		var dMargen = parseFloat(DelMilsepa(document.getElementById("tx42").value)) / 0.16;
+		document.getElementById("tx43").value = NumFormProp(((dMargen * parseFloat(document.getElementById("cbOVRteTax").value))/100).toFixed(2));
+	} else if(document.getElementById("cbOVRteBase").value == 'VALOR DE DIVISAS') {
+		document.getElementById("tx43").value = NumFormProp((parseFloat(DelMilsepa(document.getElementById("tx38").value)) * parseFloat(document.getElementById("cbOVRteTax").value) / 100).toFixed(2));
+	} else {
+		document.getElementById("tx43").value = '0';
+	}
+	//Total a pagar
+	document.getElementById("tx47").value = NumFormProp((parseFloat(DelMilsepa(document.getElementById("tx38").value)) - parseFloat(DelMilsepa(document.getElementById("tx43").value)) + parseFloat(DelMilsepa(document.getElementById("tx42").value))).toFixed(2));
+	//Valor descontado
+	document.getElementById("tx48").value = (parseFloat(DelMilsepa(document.getElementById("tx38").value)) - parseFloat(DelMilsepa(document.getElementById("tx43").value))).toFixed(2);
+	//----------------------------------------------------------
+	//Si entra desde cliente activa aceptar
+	if(document.getElementById("tx20").value != '')
+	{
+		enabtn('btaccept');		
+	}
 }
 //--------------------------------------------------------
 //funcion aceptar operacion

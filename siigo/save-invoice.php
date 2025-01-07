@@ -73,7 +73,7 @@
             $codigoValidacion = validarRespuestaSiigo($clienteResponse);
 
             // Imprimir salida en el navegador
-            echo "<script>console.log(' checkCliente respuesta: " . ((isset($clienteResponse)) ? addslashes($clienteResponse) : '') . " ');</script>";
+            echo "<script>console.log(' checkCliente respuesta: " . ((isset($clienteResponse)) ? addslashes(json_encode($clienteResponse)) : '') . " ');</script>";
 
             // Ejecutar acción según el caso.
             switch ($codigoValidacion) {
@@ -189,7 +189,6 @@
         mail('soporte@atsys.co','ClientPayload',var_export($ClientPayload, true));
         echo "<script>console.log('Payload de cliente: " . addslashes(json_encode($clientJsonPayload)) . " ');</script>";
 
-        mail('soporte@atsys.co', '$totalResult', $totalResult);
         if ($totalResults == 0) {
             $max_retries = 3;
             $retries = 0;
@@ -246,7 +245,7 @@
             do {
                 $updateResponse = updateCliente($clienteResponse['results'][0]['id'], $clientJsonPayload, $authToken);
                 echo "<script>console.log(' respuesta actualizacion cliente: " . addslashes(json_encode($updateResponse)) . " ');</script>";
-                mail('');
+                mail('soporte@atsys.co','$updateResponse',var_export($updateResponse,true));
         
                 $codigoValidacion = validarRespuestaSiigo($updateResponse);
         
@@ -294,6 +293,7 @@
                 continue;
             }
         }
+        mail('soporte@atsys.co', '$totalResult', var_export($totalResult, true));
 
         // Creacion del payload de la factura para siigo
         $invoiceData = array(

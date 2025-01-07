@@ -61,7 +61,7 @@
    	$ahora = time();
    	$date = date_create($ahora);
 	$feccrea = isset($sTaxSet) ? $sTaxSet[5] : NULL;
-	$datef = strtotime($feccrea);
+	$datef = (isset($feccrea)) ? strtotime($feccrea) : NULL;
 	$ddiff = intval(($datef - $ahora)/ (60*60*24));	//Calcula diferencia de fechas
 	if($ddiff <= 5){
 		$ddiff = $ddiff + 1;
@@ -407,11 +407,11 @@
 				</div>
 			</div>
 		</div>
-		<?
-			for ($i = 1; $i <= $sTaxSet[1]; $i++) {	//Esto se hace por que no se puede imprimir window.print desde loop en javascript
-		?>
-	    <iframe name="frPrint<?=$i?>" id="frPrint<?=$i?>" align="left" frameborder="0" style="width:0px; height:0px;" src=""></iframe>
-		<? } ?>
+		<?php if(isset($sTaxSet)) { ?>
+			<?php for ($i = 1; $i <= $sTaxSet[1]; $i++) {	//Esto se hace por que no se puede imprimir window.print desde loop en javascript ?>
+			<iframe name="frPrint<?=$i?>" id="frPrint<?=$i?>" align="left" frameborder="0" style="width:0px; height:0px;" src=""></iframe>
+			<?php } ?>
+		<?php } ?>
 	</div>
 </div>
 </body>

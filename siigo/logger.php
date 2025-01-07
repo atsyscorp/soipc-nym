@@ -11,6 +11,7 @@
         $sql = "INSERT INTO Error_Log SET `Tipo`=?, `Mensaje`=?, Iniciador=?, Fecha=NOW()";
         $stmt = mysqli_prepare($link, $sql);
 
+        $Mensaje = str_replace("'", "", $Mensaje);
         mysqli_stmt_bind_param($stmt, "sss", $Tipo, $Mensaje, $Iniciador);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);

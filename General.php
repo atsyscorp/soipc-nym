@@ -332,14 +332,14 @@ function Gen_Accept()
 	for($i = 1; $i <= $var[0]; $i++)
 	{
 		if($i == $var[0]){
-			$Sql = $Sql. "'". $var[$i]. "'";
+			$Sql.= "'". $var[$i]. "'";
 		} else {
-			$Sql = $Sql. "'". $var[$i]. "',";
+			$Sql.= "'". $var[$i]. "',";
 		}
 	}
-	$Sql = $Sql. ")";
-	//Registro en base de datos	
-	mysqli_query($link, $Sql);
+	$Sql.= ")";
+	// Registro en base de datos
+	mysqli_query($link, $Sql) or trigger_error(mysqli_error($link));
 	//-------------------------------------------------
 	$mensaje = 10;	//Mensaje exitoso
 	echo $mensaje;
@@ -630,8 +630,8 @@ function AddSerieNew()
 	//Consulta consecutivo actual
 	$p = mysqli_query($link, $strSQLS) or die(mysqli_error());
 	while($n = mysqli_fetch_array($p)) {
-		$dSerie = $n[Consecutivo]; 
-		$dSerieO = $n[Consecutivo]; 
+		$dSerie = $n['Consecutivo']; 
+		$dSerieO = $n['Consecutivo']; 
 	}	
 	//-----------------------------------------------------
 	//Suma unidad y actualiza consecutivo
@@ -755,7 +755,7 @@ function SiplaOps()
 	}
 	//Total meses en que ha hecho operaciones para calcular promedio mensual
 	$iTotMes = 0;
-	$strSQLS = "SELECT DISTINCT Ano_Mes FROM Operacion_Ventanilla WHERE Documento_Beneficiario = '". sidc. "' AND Tipo_Operacion = '". $sops. "' AND Estado_Operacion = 'ACTIVO'";
+	$strSQLS = "SELECT DISTINCT Ano_Mes FROM Operacion_Ventanilla WHERE Documento_Beneficiario = '". $sidc. "' AND Tipo_Operacion = '". $sops. "' AND Estado_Operacion = 'ACTIVO'";
 	$totm = mysqli_query($link, $strSQLS) or die(mysqli_error($link));
 	$iTotMes = mysqli_num_rows($totm);
 	//Promedio acumulado mensual + 50% 
