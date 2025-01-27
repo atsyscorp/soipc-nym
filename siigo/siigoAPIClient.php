@@ -20,9 +20,11 @@
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 
-                // Agregada idempotencia, esto para que se asegure de que solo hay una petición única por cliente y factura.
-                $idempotencyKey = md5('NYM-'.time().'-'.rand(10000,999999));
                 if($endpoint === 'invoices') {
+                    // Agregada idempotencia, esto para que se asegure de que solo hay una petición única por cliente y factura.
+                    //$idempotencyKey = md5('NYM-'.$authToken.'-'.time().'-'.rand(10000,999999));
+                    //$idempotencyKey = bin2hex(random_bytes(16));
+                    $idempotencyKey = md5('NYM'.$authToken.time().rand(10000,999999));
                     array_push($headers, 'Idempotency-Key: ' . $idempotencyKey);
                 }
             break;

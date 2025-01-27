@@ -5,7 +5,7 @@
 	//---------------------------------------------------
 	//Captura id de operacion y origen de formato
 	$var[1]=$_GET['var1'];
-	$var[2]=$_GET['var2'];	//Cuando es por buscar operacion la variable es no vacia y carga seccion de conocimiebnto del cliente
+	$var[2]= (isset($_GET['var2'])) ? $_GET['var2'] : NULL;	//Cuando es por buscar operacion la variable es no vacia y carga seccion de conocimiebnto del cliente
 	//Valida Acceso a archivo
 	if($var[1] == ''){
 		header("location:../index.php");

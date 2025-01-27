@@ -64,6 +64,8 @@
         $max_retries = 6;
 		$retries = 0;
 
+        $totalResults = NULL;
+
 		do {
 
             // Comprobar cliente
@@ -293,6 +295,7 @@
                 continue;
             }
         }
+
         mail('soporte@atsys.co', '$totalResult', var_export($totalResult, true));
 
         // Creacion del payload de la factura para siigo
