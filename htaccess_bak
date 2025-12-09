@@ -1,0 +1,3 @@
+php_flag magic_quotes_gpc Off
+php_flag safe_mode Off
+php_value memory_limit 2048M
