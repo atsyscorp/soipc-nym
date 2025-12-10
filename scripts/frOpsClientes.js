@@ -398,34 +398,39 @@ function cmCODFind_Click(doPic, cliUp)	//Parametros --> Tomar foto y días mensa
 	//cbDoc_Change();	
 
 	if(iCFound == 1){
-		// Estos campos se limpiarán, forzando la verificación/reingreso por el usuario.
-		
-		// Grupo Segmento (tx19)
-		document.getElementById("tx19").value = '';
-		
-		// Ocupación (tx17)
-		document.getElementById("tx17").value = '';
-		
-		// Origen de Fondos (tx21)
-		document.getElementById("tx21").value = '';
-		
-		// Correo Electrónico (tx18)
-		document.getElementById("tx18").value = '';
-
-		// Segmento (tx20) - Se limpia el campo oculto donde se guarda el valor (tx20)
-		//document.getElementById("tx20").value = ''; 
-		// Y también el control visible (Segmento)
-		//document.getElementById("Segmento").value = '';
-		
+		if(document.querySelector('input[name="rbDecben"]:checked').value == 'mismo') {
+			// Estos campos se limpiarán, forzando la verificación/reingreso por el usuario.
+			
+			// Grupo Segmento (tx19)
+			document.getElementById("tx19").value = '';
+			
+			// Ocupación (tx17)
+			document.getElementById("tx17").value = '';
+			
+			// Origen de Fondos (tx21)
+			document.getElementById("tx21").value = '';
+			
+			// Correo Electrónico (tx18)
+			document.getElementById("tx18").value = '';
+	
+			// Segmento (tx20) - Se limpia el campo oculto donde se guarda el valor (tx20)
+			//document.getElementById("tx20").value = ''; 
+			// Y también el control visible (Segmento)
+			//document.getElementById("Segmento").value = '';
+			
+		}
 	}
 	//Pone la dirección en el primer campo
 	document.getElementById("txAdd1").value = document.getElementById("tx14").value;
 	//Ciudad - Departamento
 	cbDep_Change();
 	if(iCFound == 1){document.getElementById("Ciudad_1").value = document.getElementById("tx16").value;}
-	//Grupo Segmento
-	//cbGroup_Change();
-	//document.getElementById("Segmento").value = document.getElementById("tx20").value;
+
+	if(document.querySelector('input[name="rbDecben"]:checked').value == 'diferente') {
+		// Grupo Segmento
+		cbGroup_Change();
+		document.getElementById("Segmento").value = document.getElementById("tx20").value;
+	}
 	//Fecha de nacimiento
 	var cbyear = document.getElementById('cbYear');
 	var cbmonth = document.getElementById('cbMonth');
